@@ -43,9 +43,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <StackPanel Visibility="Visible" Name="progress" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Text="Carregando" Foreground="Black"/>
-                <ProgressBar Height="10" IsIndeterminate="True"/>
-
+                <ProgressBar Height="10" Width="100" IsIndeterminate="True"/>
             </StackPanel>
         </Grid>
     </Grid>

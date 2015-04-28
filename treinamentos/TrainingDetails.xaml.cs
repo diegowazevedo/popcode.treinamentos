@@ -20,8 +20,8 @@ namespace treinamentos {
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e) {
+            Database db = new Database();
             if (training != null) {
-                Database db = new Database();
                 Training tr = db.Training.Single(t => t.id == training.id);
                 photo.Source = tr.imageLogo;
                 tName.Text = tr.name;
@@ -35,8 +35,9 @@ namespace treinamentos {
                     te += t.name + "\n";
                 }
                 tTeachers.Text = te;
-
             }
+            db.Dispose();
+            GC.Collect();
         }
     }
 }

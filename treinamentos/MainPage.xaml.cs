@@ -21,7 +21,9 @@ namespace treinamentos {
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e) {
-            
+            listTraining.Visibility = Visibility.Collapsed;
+            progress.Visibility = Visibility.Visible;
+
             List<Training> trainings = new List<Training>();
 
             if (!HttpHelper.CheckInternetConnection()) {
@@ -36,10 +38,11 @@ namespace treinamentos {
             listTraining.ItemsSource = trainings;
             listTraining.SelectionChanged += OnSelectionChanged;
             progress.Visibility = Visibility.Collapsed;
+            listTraining.Visibility = Visibility.Visible;
 
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e) {
+        protected override void OnNavigatedFrom(NavigationEventArgs e) { 
             TrainingDetails trainingDetails = e.Content as TrainingDetails;
             if (trainingDetails != null) {
                 trainingDetails.training = this.training;

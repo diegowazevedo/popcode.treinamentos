@@ -13,7 +13,7 @@ namespace treinamentos.Src.Classes {
 
         public static async Task<List<Training>> GetTrainingsAsync() {
             Database db = new Database();
-
+            try { 
             db.DeleteDatabase();
             db.CreateDatabase();
 
@@ -25,7 +25,13 @@ namespace treinamentos.Src.Classes {
 
             trainings = parseJSON(json);
 
+            db.Dispose();
+            GC.Collect();
             return trainings;
+            } catch (Exception e) {
+                Debug.WriteLine("Error => "+e.Message);
+                return null;
+            }
         }
 
         public static List<Training> parseJSON(String json) {
