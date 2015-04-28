@@ -8,6 +8,8 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using treinamentos.Src.Classes;
+using treinamentos.Src.Classes.Entity;
+using System.Diagnostics;
 
 namespace treinamentos {
     public partial class TrainingDetails : PhoneApplicationPage {
@@ -19,18 +21,20 @@ namespace treinamentos {
 
         protected override void OnNavigatedTo(NavigationEventArgs e) {
             if (training != null) {
-                photo.Source = training.imageLogo;
-                tName.Text = training.name;
-                tDescription.Text = training.description;
-                tTarget.Text = training.target;
-                tRequirements.Text = training.requirements;
-                tMethodology.Text = training.methodology;
-                tTopics.Text = training.topics;
-                String teachers = "";
-                foreach(Teacher teacher in training.teacher){
-                    teachers += teacher.name+"\n";
+                Database db = new Database();
+                Training tr = db.Training.Single(t => t.id == training.id);
+                photo.Source = tr.imageLogo;
+                tName.Text = tr.name;
+                tDescription.Text = tr.description;
+                tTarget.Text = tr.target;
+                tRequirements.Text = tr.requirements;
+                tMethodology.Text = tr.methodology;
+                wTopics.NavigateToString(tr.topics);
+                String te = "";
+                foreach (var t in tr.teachers) {
+                    te += t.name + "\n";
                 }
-                tTeachers.Text = teachers;
+                tTeachers.Text = te;
 
             }
         }

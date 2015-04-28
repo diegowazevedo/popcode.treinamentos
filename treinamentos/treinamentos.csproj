@@ -104,10 +104,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AppResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Src\Classes\Database.cs" />
+    <Compile Include="Src\Classes\Entity\TeacherTraining.cs" />
     <Compile Include="Src\Classes\HttpHelper.cs" />
     <Compile Include="Src\Classes\Model.cs" />
-    <Compile Include="Src\Classes\Teacher.cs" />
-    <Compile Include="Src\Classes\Training.cs" />
+    <Compile Include="Src\Classes\Entity\Teacher.cs" />
+    <Compile Include="Src\Classes\Entity\Training.cs" />
     <Compile Include="Src\Classes\TrainingService.cs" />
     <Compile Include="Src\Classes\Utils.cs" />
     <Compile Include="TrainingDetails.xaml.cs">
@@ -139,7 +141,6 @@
     <None Include="Properties\WMAppManifest.xml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Resources\json.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AlignmentGrid.png" />
@@ -180,6 +181,9 @@
       <HintPath>..\packages\PhoneThemeManager.2.1.2\lib\windowsphone8\JeffWilcox.PhoneThemeManager.dll</HintPath>
       <Private>True</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />

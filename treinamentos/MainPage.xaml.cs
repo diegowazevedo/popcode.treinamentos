@@ -9,6 +9,8 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using treinamentos.Resources;
 using treinamentos.Src.Classes;
+using treinamentos.Src.Classes.Entity;
+using System.Diagnostics;
 
 namespace treinamentos {
     public partial class MainPage : PhoneApplicationPage {
@@ -19,8 +21,18 @@ namespace treinamentos {
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e) {
+            
+            List<Training> trainings = new List<Training>();
 
-            List<Training> trainings = await TrainingService.GetTrainingsAsync();
+            if (!HttpHelper.CheckInternetConnection()) {
+                MessageBox.Show("Sem conexão com a internet.");
+                Database db = new Database();
+                if (db.DatabaseExists()) {
+                    trainings = TrainingDB.getTrainings();
+                }
+            } else {
+                trainings = await TrainingService.GetTrainingsAsync();
+            }
             listTraining.ItemsSource = trainings;
             listTraining.SelectionChanged += OnSelectionChanged;
             progress.Visibility = Visibility.Collapsed;
@@ -30,7 +42,6 @@ namespace treinamentos {
         protected override void OnNavigatedFrom(NavigationEventArgs e) {
             TrainingDetails trainingDetails = e.Content as TrainingDetails;
             if (trainingDetails != null) {
-                //Passa o objeto carro como prarametro
                 trainingDetails.training = this.training;
             }
         }

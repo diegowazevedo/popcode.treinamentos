@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Linq;
 using System.Text;
@@ -8,11 +11,11 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace treinamentos.Src.Classes {
+namespace treinamentos.Src.Classes.Entity {
     [Table]
     public class Training : Model {
 
-        [Column(IsPrimaryKey = true)]
+        [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public int id { get; set; }
 
         [Column(CanBeNull = false)]
@@ -69,8 +72,43 @@ namespace treinamentos.Src.Classes {
         [Column(CanBeNull = false)]
         public String topics { get; set; }
 
-        [Column(CanBeNull = false)]
-        public List<Teacher> teacher { get; set; }
+        private EntitySet<TeacherTraining> _teacherTraining = new EntitySet<TeacherTraining>();
+        [Association(Name = "FK_TeacherTrainings_Training", Storage = "_teacherTraining", OtherKey = "trainingId", ThisKey = "id")]
+        internal ICollection<TeacherTraining> teacherTraining {
+            get { return _teacherTraining; }
+            set { _teacherTraining.Assign(value); }
+        }
+
+        public ICollection<Teacher> teachers {
+            get {
+
+                var teachers = new ObservableCollection<Teacher>(from tt in teacherTraining select tt.teacher);
+                teachers.CollectionChanged += TeacherCollectionChanged;
+                return teachers;
+            }
+        }
+
+        private void TeacherCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
+            if (NotifyCollectionChangedAction.Add == e.Action) {
+                foreach (Teacher addedTeacher in e.NewItems)
+                    OnTeacherAdded(addedTeacher);
+            }
+
+            if (NotifyCollectionChangedAction.Remove == e.Action) {
+                foreach (Teacher removedTeacher in e.OldItems)
+                    OnTeacherRemoved(removedTeacher);
+            }
+        }
+
+        private void OnTeacherAdded(Teacher addedTeacher) {
+            TeacherTraining tt = new TeacherTraining() { teacher = addedTeacher, training = this };
+        }
+
+        private void OnTeacherRemoved(Teacher removedTeacher) {
+            TeacherTraining ttRecord = teacherTraining.SingleOrDefault(tt => tt.training == this && tt.teacher == removedTeacher);
+            if (ttRecord != null)
+                ttRecord.Remove();
+        }
 
         public ImageSource imageLogo {
             get {
